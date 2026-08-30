@@ -30,6 +30,7 @@ jobs:
       - name: Apply patches
         run: |
           python3 patch_handler.py upstream/handler.py
+          python3 patch_dockerfile.py upstream/Dockerfile
           cat extra_model_paths.append.yaml >> upstream/src/extra_model_paths.yaml
           echo "--- patched extra_model_paths.yaml ---"
           cat upstream/src/extra_model_paths.yaml
