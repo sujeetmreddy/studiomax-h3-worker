@@ -1,0 +1,4 @@
+  diffusion_models: models/diffusion_models/
+  text_encoders: models/text_encoders/
+  audio_encoders: models/audio_encoders/
+  model_patches: models/model_patches/
