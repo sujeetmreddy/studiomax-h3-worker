@@ -17,6 +17,14 @@ addition = (
     "RUN git clone --depth 1 https://github.com/kijai/ComfyUI-KJNodes "
     "/comfyui/custom_nodes/ComfyUI-KJNodes \\\n"
     "    && uv pip install -r /comfyui/custom_nodes/ComfyUI-KJNodes/requirements.txt\n\n"
+    "# studiomax v3: Spectrum acceleration for native H3 (~30% fewer transformer\n"
+    "# evals at matched quality; no extra python deps). Pinned for reproducibility.\n"
+    "RUN git clone --depth 1 --branch v0.1.8 "
+    "https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3 "
+    "/comfyui/custom_nodes/ComfyUI-Spectrum-MiniMax-H3\n\n"
+    "# studiomax v3: SageAttention available but OFF unless the endpoint sets\n"
+    "# SAGE_ATTENTION=1 (sm_89 FP8-PV kernels have unreproduced noise reports).\n"
+    "RUN uv pip install sageattention || echo 'sageattention install failed - opt-in only'\n\n"
     + anchor
 )
 
