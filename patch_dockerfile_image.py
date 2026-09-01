@@ -22,7 +22,7 @@ addition = (
     "    && W=\"nunchaku-1.2.0+torch${TV}-${PY}-${PY}-linux_x86_64.whl\" \\\n"
     "    && echo \"installing $W\" \\\n"
     "    && uv pip install \"https://github.com/nunchaku-tech/nunchaku/releases/download/v1.2.0/${W}\"\n\n"
-    "RUN git clone --depth 1 https://github.com/nunchaku-tech/ComfyUI-nunchaku "
+    "RUN git clone --depth 1 --branch v1.2.0 https://github.com/nunchaku-tech/ComfyUI-nunchaku "
     "/comfyui/custom_nodes/ComfyUI-nunchaku \\\n"
     "    && uv pip install -r /comfyui/custom_nodes/ComfyUI-nunchaku/requirements.txt\n"
 )
