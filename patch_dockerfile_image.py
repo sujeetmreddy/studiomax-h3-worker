@@ -13,6 +13,12 @@ import sys
 path = sys.argv[1]
 src = open(path).read()
 
+# Upstream pins torch 2.11+cu128 in the Dockerfile; nunchaku's torch2.11
+# wheel targets CUDA 13, beyond many Ada hosts' drivers. Pin the 2.8/cu12.8
+# era (ComfyUI 0.34's own) so the auto-matched wheel is driver-compatible.
+TORCH_OLD = "torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0"
+TORCH_NEW = "torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0"
+
 anchor = "RUN cd /comfyui && timeout 300 python main.py --quick-test-for-ci --cpu"
 addition = (
     anchor + "\n\n"
@@ -37,6 +43,11 @@ addition = (
     "/comfyui/custom_nodes/ComfyUI-nunchaku \\\n"
     "    && uv pip install -r /comfyui/custom_nodes/ComfyUI-nunchaku/requirements.txt\n"
 )
+
+if src.count(TORCH_OLD) != 1:
+    print(f"ERROR: torch pin anchor not found exactly once — upstream drifted")
+    sys.exit(1)
+src = src.replace(TORCH_OLD, TORCH_NEW)
 
 count = src.count(anchor)
 if count != 1:
