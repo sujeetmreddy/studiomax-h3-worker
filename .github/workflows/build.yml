@@ -55,7 +55,7 @@ jobs:
             COMFYUI_VERSION=${{ env.COMFYUI_VERSION }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:v3
+            ghcr.io/${{ github.repository }}:v4
             ghcr.io/${{ github.repository }}:latest
 
   build-image-worker:
