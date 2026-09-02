@@ -25,7 +25,7 @@ addition = (
     "# The nunchaku wheels link libcudart.so.13 (cu13 toolchain) while this\n"
     "# image ships torch+cu12.8 — provide CUDA 13 runtime side-by-side and\n"
     "# register it with the dynamic linker; the two cudarts coexist fine.\n"
-    "RUN uv pip install nvidia-cuda-runtime-cu13 \\\n"
+    "RUN uv pip install nvidia-cuda-runtime-cu13 --extra-index-url https://pypi.nvidia.com \\\n"
     "    && LIBDIR=$(python -c \"import nvidia.cuda_runtime, os; print(os.path.join(os.path.dirname(nvidia.cuda_runtime.__file__), 'lib'))\") \\\n"
     "    && echo \"$LIBDIR\" > /etc/ld.so.conf.d/cuda13-runtime.conf \\\n"
     "    && ldconfig \\\n"
