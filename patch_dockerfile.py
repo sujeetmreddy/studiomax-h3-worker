@@ -36,8 +36,7 @@ addition = (
     "    && git checkout 26545cc2dd95bc3d27f056016300673bdeee78f5 \\\n"
     "    && uv pip install -r requirements-no-cupy.txt \\\n"
     "    && mkdir -p ckpts/rife \\\n"
-    "    && curl -fL --retry 5 -o ckpts/rife/rife47.pth "
-    "https://huggingface.co/marduk191/rife/resolve/main/rife47.pth \\\n"
+    "    && python -c \"import urllib.request; urllib.request.urlretrieve('https://huggingface.co/marduk191/rife/resolve/main/rife47.pth', 'ckpts/rife/rife47.pth')\" \\\n"
     "    && test $(stat -c %s ckpts/rife/rife47.pth) -gt 20000000\n\n"
     # Upstream's quick-test only fails on a crash; a custom node that fails to
     # IMPORT is just a log line. Gate ours explicitly.
