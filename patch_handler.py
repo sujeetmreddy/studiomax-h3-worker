@@ -34,6 +34,33 @@ count = src.count(anchor)
 if count != 1:
     print(f"ERROR: expected exactly 1 anchor occurrence, found {count} — upstream drifted")
     sys.exit(1)
+src = src.replace(anchor, addition)
 
-open(path, "w").write(src.replace(anchor, addition))
-print("handler.py patched: video/audio outputs now returned")
+# Second patch: a worker whose ComfyUI process has DIED must not linger.
+# Upstream's check_server() notices the exited PID and returns False — the
+# handler then fails every subsequent job in ~100 ms ("not reachable after
+# multiple retries") while RunPod keeps reporting the worker idle/ready.
+# Exiting the worker process makes RunPod replace it with a fresh container.
+zombie_anchor = (
+    '                "Server will not become reachable."\n'
+    "            )\n"
+    "            return False\n"
+)
+zombie_fix = (
+    '                "Server will not become reachable."\n'
+    "            )\n"
+    "            # studiomax patch: never linger as a zombie — exit so RunPod\n"
+    "            # replaces this worker instead of failing every job it is handed.\n"
+    "            os._exit(3)\n"
+    "            return False\n"
+)
+zcount = src.count(zombie_anchor)
+if zcount != 1:
+    print(f"ERROR: expected exactly 1 zombie anchor occurrence, found {zcount} — upstream drifted")
+    sys.exit(1)
+src = src.replace(zombie_anchor, zombie_fix)
+if "import os" not in src:
+    src = "import os\n" + src
+
+open(path, "w").write(src)
+print("handler.py patched: video/audio outputs returned; dead-ComfyUI workers exit instead of zombie-ing")
